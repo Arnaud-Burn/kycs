@@ -5,3 +5,6 @@ Check state of last 5 Fax or email on Kyocera printers plus information about nu
 
 
 USE : ./kycs.pl HOSTNAME
+
+
+Compatible with Shinken and Naggios like
