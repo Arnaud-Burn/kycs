@@ -1,0 +1,12 @@
+#TODO
+* Replace WORD state with OK-CRITICAL state in WebUI
+* Replace docname with more readable name, date and time
+
+#Version 0.1
+* Check for State of a send
+* Check for the page number of a send
+* Check for the doc name of a send
+* Check for the type of a send
+* Send all datas to WebUI
+* Error message at lost connection
+* Error message at bad use
