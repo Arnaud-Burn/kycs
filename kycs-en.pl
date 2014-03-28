@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
 ############### KYCS - Kyocera Check Send #######################
-# Version : 0.1
-# Date :  March 27 2014
+# Version : 0.2
+# Date :  March 28 2014
 # Author  : Arnaud Comein (arnaud.comein@gmail.com)
 # Licence : GPL - http://www.fsf.org/licenses/gpl.txt
 #################################################################
@@ -25,10 +25,11 @@ my $state;
 my $truestate;
 my $pagenumber;
 my $docname;
+my %ERRORS=('OK'=>0,'WARNING'=>1,'CRITICAL'=>2,'UNKNOWN'=>3,'DEPENDENT'=>4);
 
 #Centralisation des erreurs
 my $help = "Correct use : ./kycs.pl HOSTNAME SENDNUMBER[1=Last]\n";
-my $errcon = "Unable to connect to $HOST\n";
+my $errcon = "Unable to connect to $HOST, Check your OID number and your hostname\n";
 
 #Help
 ($HOST) && ($NUMBER) || die $help;
@@ -44,17 +45,25 @@ if ($type == 4)
 if ($type == 6)
 { $truetype = "EMAIL"; }
 if ($state == 0)
-{ $truestate = "SEND"; }
+{ $truestate = "ENVOYE"; }
 else
-{ $truestate = "NOT SEND"; }
+{ $truestate = "NON ENVOYE"; }
 
 #Prevoir une sortie si la connexion à l'hote ne se fait pas
 if ($type)
 {
 	#Retour Shinken WebUI
 	print "Document $docname is a $truetype of $pagenumber pages and it is $truestate\n";
+	
+	if ($state == 0)
+	{ exit $ERRORS{"OK"}; }
+	else
+	{ exit $ERRORS{"WARNING"}; }
 
 } #Fin de la sortie en cas d'erreur de connexion
 
 else 
-{ print $errcon; }
+{ 
+	print $errcon; 
+	exit $ERRORS{"CRITICAL"};
+}
