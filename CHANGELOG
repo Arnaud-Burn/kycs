@@ -1,6 +1,8 @@
 #TODO
-* Replace WORD state with OK-CRITICAL state in WebUI
 * Replace docname with more readable name, date and time
+
+#Version 0.11
+* Add error code into Shinken UI [WARNING : CRITICAL]
 
 #Version 0.1
 * Check for State of a send
