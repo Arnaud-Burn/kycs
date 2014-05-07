@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 ############### KYCS - Kyocera Check Send #######################
-# Version : 0.2
+# Version : 0.3
 # Date :  March 28 2014
 # Author  : Arnaud Comein (arnaud.comein@gmail.com)
 # Licence : GPL - http://www.fsf.org/licenses/gpl.txt
@@ -25,11 +25,17 @@ my $state;
 my $truestate;
 my $pagenumber;
 my $docname;
+my $DDate;
+my $MDate;
+my $YDate;
+my $HTime;
+my $MTime;
+my $NumDoc;
 my %ERRORS=('OK'=>0,'WARNING'=>1,'CRITICAL'=>2,'UNKNOWN'=>3,'DEPENDENT'=>4);
 
 #Centralisation des erreurs
-my $help = "Correct use : ./kycs.pl HOSTNAME SENDNUMBER[1=Last]\n";
-my $errcon = "Unable to connect to $HOST, Check your OID number and your hostname\n";
+my $help = "Use : ./kycs.pl HOSTNAME SENDNUMBER[1=last]\n";
+my $errcon = "Unable to connect to $HOST, Check OID and hostname\n";
 
 #Help
 ($HOST) && ($NUMBER) || die $help;
@@ -45,16 +51,26 @@ if ($type == 4)
 if ($type == 6)
 { $truetype = "EMAIL"; }
 if ($state == 0)
-{ $truestate = "ENVOYE"; }
+{ $truestate = "SENT"; }
 else
-{ $truestate = "NON ENVOYE"; }
+{ $truestate = "NOT SENT"; }
+
+$DDate = substr($docname, 15, 2);
+$MDate = substr($docname, 13, 2);
+$YDate = substr($docname, 9, 4);
+$NumDoc = substr($docname, 3, 6);
+$HTime = substr($docname, 17, 2);
+$MTime = substr($docname, 19, 2);
 
 #Prevoir une sortie si la connexion à l'hote ne se fait pas
 if ($type)
 {
 	#Retour Shinken WebUI
-	print "Document $docname is a $truetype of $pagenumber pages and it is $truestate\n";
-	
+	if ( $type == 6)
+	{ print "Document $NumDoc is a $truetype and had been $truestate on the $DYate/$MDate/$DDate at $HTime:$MTime"; }
+	else
+	{ print "Document $NumDoc is a $truetype of $pagenumber page(s) and had been $truestate on the $YDate/$MDate/$DDate at $HTime:$MTime"; }
+
 	if ($state == 0)
 	{ exit $ERRORS{"OK"}; }
 	else
