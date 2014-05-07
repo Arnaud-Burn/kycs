@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 
 ############### KYCS - Kyocera Check Send #######################
-# Version : 0.2
+# Version : 0.3
 # Date :  March 28 2014
 # Author  : Arnaud Comein (arnaud.comein@gmail.com)
 # Licence : GPL - http://www.fsf.org/licenses/gpl.txt
@@ -25,6 +25,12 @@ my $state;
 my $truestate;
 my $pagenumber;
 my $docname;
+my $DDate;
+my $MDate;
+my $YDate;
+my $HTime;
+my $MTime;
+my $NumDoc;
 my %ERRORS=('OK'=>0,'WARNING'=>1,'CRITICAL'=>2,'UNKNOWN'=>3,'DEPENDENT'=>4);
 
 #Centralisation des erreurs
@@ -49,12 +55,22 @@ if ($state == 0)
 else
 { $truestate = "NON ENVOYE"; }
 
+$DDate = substr($docname, 15, 2);
+$MDate = substr($docname, 13, 2);
+$YDate = substr($docname, 9, 4);
+$NumDoc = substr($docname, 3, 6);
+$HTime = substr($docname, 17, 2);
+$MTime = substr($docname, 19, 2);
+
 #Prevoir une sortie si la connexion à l'hote ne se fait pas
 if ($type)
 {
 	#Retour Shinken WebUI
-	print "Le document $docname est un $truetype de $pagenumber pages et son état est $truestate\n";
-	
+	if ( $type == 6)
+	{ print "Le document $NumDoc est un $truetype et a ete $truestate le $DDate/$MDate/$YDate vers $HTime:$MTime"; }
+	else
+	{ print "Le document $NumDoc est un $truetype de $pagenumber page(s) et a ete $truestate le $DDate/$MDate/$YDate vers $HTime:$MTime"; }
+
 	if ($state == 0)
 	{ exit $ERRORS{"OK"}; }
 	else
